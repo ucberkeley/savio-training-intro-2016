@@ -8,7 +8,7 @@ We'll do this mostly as a demonstration. I encourage you to login to your accoun
 
 Much of this material is based on the extensive Savio documention we have prepared and continue to prepare, available at [http://research-it.berkeley.edu/services/high-performance-computing/user-guide](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
-The materials for this tutorial are available using git at (https://github.com/ucberkeley/savio-training-intro-2016) or simply as a zip file at (https://github.com/ucberkeley/savio-training-intro-2016/archive/master.zip).
+The materials for this tutorial are available using git at [https://github.com/ucberkeley/savio-training-intro-2016](https://github.com/ucberkeley/savio-training-intro-2016) or simply as a [zip file](https://github.com/ucberkeley/savio-training-intro-2016/archive/master.zip).
 
 # Outline
 
@@ -35,7 +35,7 @@ This training session will cover the following topics:
      - Low-priority queue
      - HTC jobs
      - Monitoring jobs and cluster status
- - Basic use of standard software: Python, R, MATLAB, etc., depending on participant requests
+ - Basic use of standard software: Python and R
  - More information
      - How to get additional help
      - Upcoming events
@@ -54,19 +54,19 @@ This training session will cover the following topics:
 - All regular Berkeley faculty can request 200,000 service units (roughly core-hours) per year through the [Faculty Computing Allowance (FCA)](http://research-it.berkeley.edu/services/high-performance-computing/faculty-computing-allowance)
 - Researchers can also purchase nodes for their own priority access and gain access to the shared Savio infrastructure and to the ability to *burst* to additional nodes through the [condo cluster program](http://research-it.berkeley.edu/services/high-performance-computing/condo-cluster-program)
 
-Faculty/principle investigators can allow researchers working with them to get user accounts with access to the FCA or condo resources available to the faculty member.
+Faculty/principal investigators can allow researchers working with them to get user accounts with access to the FCA or condo resources available to the faculty member.
 
 # Savio computing nodes
 
-Let's take a look at the hardware specifications of the computing nodes on the cluster: [(see the *Hardware Configuration* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
+Let's take a look at the hardware specifications of the computing nodes on the cluster [(see the *Hardware Configuration* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
-The nodes are divided into several pools, called partitions [(see the *configuration details* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide). Any job you submit must be submitted to a partition to which you have access.
+The nodes are divided into several pools, called partitions [(see the *Configuration Details* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide). Any job you submit must be submitted to a partition to which you have access.
 
 # Disk space options (home, scratch, project, condo storage)
 
-You have access to the following disk space as described [here in the *Storage and Backup* section](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
+You have access to the following disk space, described [here in the *Storage and Backup* section](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
-When reading/writing data to/from disk, unless the amount of data is small, please put the data in your scratch space at `/global/scratch/YOUR_USERNAME`. The system is set up so that disk access for all users is optimized when users are doing input/output (I/O) off of scratch rather than off of their home directories. Doing I/O with files on your home directory can impact the ability of others to access their files on the filesystem. 
+When reading/writing data to/from disk, unless the amount of data is small, please put the data in your scratch space at `/global/scratch/SAVIO_USERNAME`. The system is set up so that disk access for all users is optimized when users are doing input/output (I/O) off of scratch rather than off of their home directories. Doing I/O with files on your home directory can impact the ability of others to access their files on the filesystem. 
 
 We are also making available disk space for purchase via a new *condo storage* offering. The minimum purchase is $7000, which will provide roughly 20-25 TB for five years. 
 
@@ -87,21 +87,21 @@ To login, you need to have software on your own machine that gives you access to
 
 Here are instructions for [logging in](http://research-it.berkeley.edu/services/high-performance-computing/logging-savio).
 
-You need to set up your smartphone or tablet with Google authenticator to generate one-time passwords for you.
+You need to set up your smartphone or tablet with *Google authenticator* to generate one-time passwords for you.
 
 Then to login:
 ```
-ssh YOUR_USERNAME@hpc.brc.berkeley.edu
+ssh SAVIO_USERNAME@hpc.brc.berkeley.edu
 ```
 
-Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. 
+Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. YYYYYY will be shown when you open your *Google authenticator* app on your phone/tablet.
 
 If you want to be able to open programs with graphical user interfaces:
 ```
-ssh -X YOUR_USERNAME@hpc.brc.berkeley.edu
+ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu
 ```
 
-To display the graphical windows on your local machine, you'll need X server software on your own machine (which manages the graphical windows). For Windows, your options include *eXceed* or *Xming* and for Mac, there is *XQuartz*.
+To display the graphical windows on your local machine, you'll need X server software on your own machine to manage the graphical windows. For Windows, your options include *eXceed* or *Xming* and for Mac, there is *XQuartz*.
 
 # Data transfer with examples to/from laptop, Box, Google Drive, AWS
 
@@ -145,9 +145,7 @@ tar -xvzf files.tgz
 
 # Data transfer: Globus
 
-You can use Globus Connect to transfer data data to/from Savio (and between other resources) quickly and unattended. This is a better choice for large transfers.
-
-For larger transfers and for making unattended transfers that will continue in the background, Globus Connect is a good option. Here are some [instructions](http://research-it.berkeley.edu/services/high-performance-computing/using-globus-connect-savio).
+You can use Globus Connect to transfer data data to/from Savio (and between other resources) quickly and unattended. This is a better choice for large transfers. Here are some [instructions](http://research-it.berkeley.edu/services/high-performance-computing/using-globus-connect-savio).
 
 Globus transfers data between *endpoints*. Possible endpoints include: Savio, your laptop or desktop, NERSC, and XSEDE, among others.
 
@@ -172,6 +170,7 @@ Here's how you logon to box via *lftp* on Savio (assuming you've set up an exter
 
 ```
 ssh SAVIO_USERNAME@dtn.brc.berkeley.edu
+module load lftp
 lftp ftp.box.com
 set ssl-allow true
 user CAMPUS_USERNAME@berkeley.edu
@@ -209,7 +208,7 @@ bDrive provides **unlimited**, free, secured, and encrypted content storage of f
 
 You can move files to and from your laptop using the Google Drive app. 
 
-There are also some third-party tools for copying files to/from Google Drive, though I've found them to be a bit klunky. This is why I'd recommend using Box for workflows at this point. However, BRC is also working (short-term) on making Globus available for transfer to/from bDrive, though it's not available yet.
+There are also some third-party tools for copying files to/from Google Drive, though I've found them to be a bit klunky. This is why we recommend using Box for workflows at this point. However, BRC is also working (short-term) on making Globus available for transfer to/from bDrive, though it's not available yet.
 
 # Software modules
 
@@ -240,6 +239,8 @@ Similarly, we can see that linear algebra, FFT, and HDF5/NetCDF software is avai
 ```
 module load intel
 module avail
+module swap intel gcc
+module avail
 ```
 
 # Submitting jobs: accounts and partitions
@@ -251,7 +252,25 @@ When submitting a job, the main things you need to indicate are the project acco
 You can see what accounts you have access to and which partitions within those accounts as follows:
 
 ```
-sacctmgr -p show associations user=USERNAME
+sacctmgr -p show associations user=SAVIO_USERNAME
+```
+
+Here's an example of the output for a user who has access to an FCA, a condo, and a special partner account:
+```
+Cluster|Account|User|Partition|Share|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
+brc|co_stat|paciorek|savio2_gpu|1||||||||||||savio_lowprio|savio_lowprio||
+brc|co_stat|paciorek|savio2_htc|1||||||||||||savio_lowprio|savio_lowprio||
+brc|co_stat|paciorek|savio|1||||||||||||savio_lowprio|savio_lowprio||
+brc|co_stat|paciorek|savio_bigmem|1||||||||||||savio_lowprio|savio_lowprio||
+brc|co_stat|paciorek|savio2|1||||||||||||savio_lowprio,stat_normal|stat_normal||
+brc|fc_paciorek|paciorek|savio2|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|fc_paciorek|paciorek|savio|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|fc_paciorek|paciorek|savio_bigmem|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|ac_scsguest|paciorek|savio2_htc|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|ac_scsguest|paciorek|savio2_gpu|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|ac_scsguest|paciorek|savio2|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|ac_scsguest|paciorek|savio_bigmem|1||||||||||||savio_debug,savio_normal|savio_normal||
+brc|ac_scsguest|paciorek|savio|1||||||||||||savio_debug,savio_normal|savio_normal||
 ```
 
 If you are part of a condo, you'll notice that you have *low-priority* access to certain partitions. For example I am part of the statistics cluster *co_stat*, which owns some Savio2 nodes and therefore I have normal access to those, but I can also burst beyond the condo and use other partitions at low-priority (see below).
@@ -276,7 +295,7 @@ Here's an example job script that I'll run. You'll need to modify the --account 
         # Partition:
         #SBATCH --partition=savio2
         #
-        # Wall clock limit:
+        # Wall clock limit (30 seconds here):
         #SBATCH --time=00:00:30
         #
         ## Command(s) to run:
@@ -289,9 +308,9 @@ Now let's submit and monitor the job:
 ```
 sbatch job.sh
 
-squeue -j $YOUR_JOB_ID
+squeue -j JOB_ID
 
-wwall -j $YOUR_JOB_ID
+wwall -j JOB_ID
 ```
 
 Note that except for the *savio2_htc*  and *savio2_gpu* partitions, all jobs are given exclusive access to the entire node or nodes assigned to the job (and your account is charged for all of the cores on the node(s). 
@@ -328,7 +347,7 @@ Here's an example job script for a job that uses MPI for parallelizing over mult
        #SBATCH --time=00:00:30
        #
        ## Command(s) to run (example):
-       module load openmpi
+       module load intel openmpi
        mpirun ./a.out
 
 
@@ -336,8 +355,14 @@ When you write your code, you may need to specify information about the number o
 
 Here are some of the variables that may be useful: SLURM_NTASKS, SLURM_CPUS_PER_TASK, SLURM_NODELIST, SLURM_NNODES.
 
+Some common paradigms are:
+
+ - MPI jobs that use *one* CPU per task for each of *n* tasks
+ - openMP/threaded jobs that use *c* CPUs for *one* task
+ - hybrid MPI+threaded jobs that use *c* CPUs for each of *n* tasks
 
 There are lots more examples of job submission scripts for different kinds of parallelization (multi-node (MPI), multi-core (openMP), hybrid, etc.) [here](http://research-it.berkeley.edu/services/high-performance-computing/running-your-jobs#Job-submission-with-specific-resource-requirements).
+
 
 # Interactive jobs
 
@@ -346,14 +371,16 @@ You can also do work interactively.
 For this, you may want to have used the -X flag to ssh if you are running software with a GUI such as MATLAB. 
 
 ```
-# ssh -X USERNAME@hpc.brc.berkeley.edu
+# ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu
 srun -A co_stat -p savio2  -N 1 -t 10:0 --pty bash
+# now execute on the compute node:
+module load matlab
 matlab
 ```
 
 # Low-priority queue
 
-Condo users have access to the broader compute resource that is limited only by the size of partitions, under the savio_lowprio QoS (queue). However this QoS does not get a priority as high as the general QoSs, such as "savio_normal" and "savio_debug", or all the condo QoSs, and it is subject to preemption when all the other QoSs become busy. 
+Condo users have access to the broader compute resource that is limited only by the size of partitions, under the *savio_lowprio* QoS (queue). However this QoS does not get a priority as high as the general QoSs, such as *savio_normal* and *savio_debug*, or all the condo QoSs, and it is subject to preemption when all the other QoSs become busy. 
 
 More details can be found [in the *Low Priority Jobs* section](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
@@ -366,7 +393,7 @@ env | grep SLURM
 
 # HTC jobs
 
-There is a partition called the HTC partition that allows you to request cores individually rather than an entire node at a time. The nodes in this partition are faster than the other nodes and have access to flash storage for fast I/O. 
+There is a partition called the HTC partition that allows you to request cores individually rather than an entire node at a time. The nodes in this partition are faster than the other nodes.
 
 You must request access to the HTC partition at this time before you can submit jobs to it.
 
@@ -377,15 +404,24 @@ python3 calc.py >& calc.out &
 top
 ```
 
+# Alternatives to the HTC partition for collections of serial jobs
+ 
+You may have many serial jobs to run. It may be more cost-effective to collect those jobs together and run them across multiple cores on one or more nodes.
 
-??? details on accessing flash storage for I/O?
+Here are some options:
+
+  - [see the Savio tip on "How to run High-Throughput Computing ..."](http://research-it.berkeley.edu/services/high-performance-computing/tips-using-brc-savio-cluster)
+  - using [single-node parallelism](https://github.com/berkeley-scf/tutorial-parallel-basics) and [multiple-node parallelism](https://github.com/berkeley-scf/tutorial-parallel-distributed) in Python, R, and MATLAB
+    - parallel R tools such as *foreach*, "parLapply*, and *mclapply*
+    - parallel Python tools such as  *ipython*, *pp*, and *multiprocessing*
+    - parallel functionality in MATLAB through *parfor*
 
 # Monitoring jobs and the job queue
 
 The basic command for seeing what is running on the system is `squeue`:
 ```
 squeue
-squeue -u USERNAME
+squeue -u SAVIO_USERNAME
 squeue -a co_stat
 ```
 
@@ -397,7 +433,7 @@ sinfo -p savio2_gpu
 
 You can cancel a job with `scancel`.
 ```
-scancel $YOUR_JOB_ID
+scancel YOUR_JOB_ID
 ```
 
 For more information on cores, QoS, and additional (e.g., GPU) resources, here's some syntax:
@@ -407,14 +443,20 @@ squeue -o "%.7i %.9P %.20j %.8u %.2t %.9M %.5C %.8r %.6D %R %p %q %b"
 
 We provide some [tips about monitoring your job](http://research-it.berkeley.edu/services/high-performance-computing/tips-using-brc-savio-cluster).
 
-# Basic use of standard software: Python, R, MATLAB, etc., depending on participant requests
+# Basic use of standard software: Python
+
+
+# Basic use of standard software: R
 
 
 # How to get additional help
 
- - For technical issues and questions about using Savio: email brc-hpc-help@berkeley.edu.
- - For questions about computing resources in general, including cloud computing: email brc@berkeley.edu.
- - For questions about data management (including HIPAA-protected data): email researchdata@berkeley.edu.
+ - For technical issues and questions about using Savio: 
+    - brc-hpc-help@berkeley.edu.
+ - For questions about computing resources in general, including cloud computing: 
+    - brc@berkeley.edu.
+ - For questions about data management (including HIPAA-protected data): 
+    - researchdata@berkeley.edu.
 
 
 # Upcoming events
