@@ -54,7 +54,7 @@ This training session will cover the following topics:
 - All regular Berkeley faculty can request 200,000 service units (roughly core-hours) per year through the [Faculty Computing Allowance (FCA)](http://research-it.berkeley.edu/services/high-performance-computing/faculty-computing-allowance)
 - Researchers can also purchase nodes for their own priority access and gain access to the shared Savio infrastructure and to the ability to *burst* to additional nodes through the [condo cluster program](http://research-it.berkeley.edu/services/high-performance-computing/condo-cluster-program)
 
-Faculty/principle investigators can allow researchers working with them to get user accounts with access to the FCA or condo resources available to the faculty member.
+Faculty/principal investigators can allow researchers working with them to get user accounts with access to the FCA or condo resources available to the faculty member.
 
 # Savio computing nodes
 
