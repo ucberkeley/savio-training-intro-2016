@@ -443,10 +443,99 @@ squeue -o "%.7i %.9P %.20j %.8u %.2t %.9M %.5C %.8r %.6D %R %p %q %b"
 
 We provide some [tips about monitoring your job](http://research-it.berkeley.edu/services/high-performance-computing/tips-using-brc-savio-cluster).
 
-# Basic use of standard software: Python
+# Example use of standard software: Python
 
+Let's see a basic example of doing an analysis in Python across multiple cores on multiple nodes. We'll use the airline departure data in *bayArea.csv*.
 
-# Basic use of standard software: R
+Here we'll use *IPython* for parallel computing. The example is a bit contrived in that a lot of the time is spent moving data around rather than doing computation, but it should illustrate how to do a few things.
+
+First we'll install a Python package not already available as a module.
+
+```
+# remember to do I/O off scratch
+cp bayArea.csv /global/scratch/paciorek/.
+# install Python package
+module load pip
+# trial and error to realize which package dependencies available in modules...
+module load scipy pandas pytz
+pip install --user statsmodels
+```
+
+Now we'll start up an interactive session, though often this sort of thing would be done via a batch job.
+
+```
+srun -A co_stat -p savio2  -N 2 --ntasks-per-node=24 -t 30:0 --pty bash
+```
+
+Now we'll start up a cluster using IPython's parallel tools. To do this across multiple nodes within a SLURM job, it goes like this:
+ 
+```
+module load python/2.7.8 ipython gcc openmpi
+ipcontroller --ip='*' &
+srun ipengine &
+sleep 15  # wait until all engines have successfully started
+ipython
+```
+
+If we were doing this on a single node, we could start everything up in a single call to *ipcluster*:
+
+```
+module load python/2.7.8 ipython
+ipcluster start -n $SLURM_CPUS_ON_NODE &
+ipython
+```
+
+Here's our Python code (also found in *parallel.py*) for doing an analysis across multiple strata/subsets of the dataset in parallel. Note that the 'load_balanced_view' business is so that the computations are done in a load-balanced fashion, which is important for tasks that take different amounts of time to complete.
+
+```
+from IPython.parallel import Client
+c = Client()
+c.ids
+
+dview = c[:]
+dview.block = True
+dview.apply(lambda : "Hello, World")
+
+lview = c.load_balanced_view()
+lview.block = True
+
+import pandas
+dat = pandas.read_csv('bayArea.csv', header = None)
+dat.columns = ('Year','Month','DayofMonth','DayOfWeek','DepTime','CRSDepTime','ArrTime','CRSArrTime','UniqueCarrier','FlightNum','TailNum','ActualElapsedTime','CRSElapsedTime','AirTime','ArrDelay','DepDelay','Origin','Dest','Distance','TaxiIn','TaxiOut','Cancelled','CancellationCode','Diverted','CarrierDelay','WeatherDelay','NASDelay','SecurityDelay','LateAircraftDelay')
+
+dview.execute('import statsmodels.api as sm')
+
+dat2 = dat.loc[:, ('DepDelay','Year','Dest','Origin')]
+dests = dat2.Dest.unique()
+
+mydict = dict(dat2 = dat2, dests = dests)
+dview.push(mydict)
+
+def f(id):
+    sub = dat2.loc[dat2.Dest == dests[id],:]
+    sub = sm.add_constant(sub)
+    model = sm.OLS(sub.DepDelay, sub.loc[:,('const','Year')])
+    results = model.fit()
+    return results.params
+
+import time
+time.time()
+parallel_result = lview.map(f, range(len(dests)))
+#result = map(f, range(len(dests)))
+time.time()
+
+# some NaN values because all 'Year' values are the same for some destinations
+
+parallel_result
+```
+
+And we'll stop our cluster. 
+
+```
+ipcluster stop
+```
+
+# Example use of standard software: R
 
 Let's see a basic example of doing an analysis in R across multiple cores on multiple nodes. We'll use the airline departure data in *bayArea.csv*.
 

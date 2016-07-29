@@ -310,8 +310,72 @@ sinfo -p savio2_gpu</code></pre>
 <p>For more information on cores, QoS, and additional (e.g., GPU) resources, here's some syntax:</p>
 <pre><code>squeue -o &quot;%.7i %.9P %.20j %.8u %.2t %.9M %.5C %.8r %.6D %R %p %q %b&quot; </code></pre>
 <p>We provide some <a href="http://research-it.berkeley.edu/services/high-performance-computing/tips-using-brc-savio-cluster">tips about monitoring your job</a>.</p>
-<h1 id="basic-use-of-standard-software-python">Basic use of standard software: Python</h1>
-<h1 id="basic-use-of-standard-software-r">Basic use of standard software: R</h1>
+<h1 id="example-use-of-standard-software-python">Example use of standard software: Python</h1>
+<p>Let's see a basic example of doing an analysis in Python across multiple cores on multiple nodes. We'll use the airline departure data in <em>bayArea.csv</em>.</p>
+<p>Here we'll use <em>IPython</em> for parallel computing. The example is a bit contrived in that a lot of the time is spent moving data around rather than doing computation, but it should illustrate how to do a few things.</p>
+<p>First we'll install a Python package not already available as a module.</p>
+<pre><code># remember to do I/O off scratch
+cp bayArea.csv /global/scratch/paciorek/.
+# install Python package
+module load pip
+# trial and error to realize which package dependencies available in modules...
+module load scipy pandas pytz
+pip install --user statsmodels</code></pre>
+<p>Now we'll start up an interactive session, though often this sort of thing would be done via a batch job.</p>
+<pre><code>srun -A co_stat -p savio2  -N 2 --ntasks-per-node=24 -t 30:0 --pty bash</code></pre>
+<p>Now we'll start up a cluster using IPython's parallel tools. To do this across multiple nodes within a SLURM job, it goes like this:</p>
+<pre><code>module load python/2.7.8 ipython gcc openmpi
+ipcontroller --ip=&#39;*&#39; &amp;
+srun ipengine &amp;
+sleep 15  # wait until all engines have successfully started
+ipython</code></pre>
+<p>If we were doing this on a single node, we could start everything up in a single call to <em>ipcluster</em>:</p>
+<pre><code>module load python/2.7.8 ipython
+ipcluster start -n $SLURM_CPUS_ON_NODE &amp;
+ipython</code></pre>
+<p>Here's our Python code (also found in <em>parallel.py</em>) for doing an analysis across multiple strata/subsets of the dataset in parallel. Note that the 'load_balanced_view' business is so that the computations are done in a load-balanced fashion, which is important for tasks that take different amounts of time to complete.</p>
+<pre><code>from IPython.parallel import Client
+c = Client()
+c.ids
+
+dview = c[:]
+dview.block = True
+dview.apply(lambda : &quot;Hello, World&quot;)
+
+lview = c.load_balanced_view()
+lview.block = True
+
+import pandas
+dat = pandas.read_csv(&#39;bayArea.csv&#39;, header = None)
+dat.columns = (&#39;Year&#39;,&#39;Month&#39;,&#39;DayofMonth&#39;,&#39;DayOfWeek&#39;,&#39;DepTime&#39;,&#39;CRSDepTime&#39;,&#39;ArrTime&#39;,&#39;CRSArrTime&#39;,&#39;UniqueCarrier&#39;,&#39;FlightNum&#39;,&#39;TailNum&#39;,&#39;ActualElapsedTime&#39;,&#39;CRSElapsedTime&#39;,&#39;AirTime&#39;,&#39;ArrDelay&#39;,&#39;DepDelay&#39;,&#39;Origin&#39;,&#39;Dest&#39;,&#39;Distance&#39;,&#39;TaxiIn&#39;,&#39;TaxiOut&#39;,&#39;Cancelled&#39;,&#39;CancellationCode&#39;,&#39;Diverted&#39;,&#39;CarrierDelay&#39;,&#39;WeatherDelay&#39;,&#39;NASDelay&#39;,&#39;SecurityDelay&#39;,&#39;LateAircraftDelay&#39;)
+
+dview.execute(&#39;import statsmodels.api as sm&#39;)
+
+dat2 = dat.loc[:, (&#39;DepDelay&#39;,&#39;Year&#39;,&#39;Dest&#39;,&#39;Origin&#39;)]
+dests = dat2.Dest.unique()
+
+mydict = dict(dat2 = dat2, dests = dests)
+dview.push(mydict)
+
+def f(id):
+    sub = dat2.loc[dat2.Dest == dests[id],:]
+    sub = sm.add_constant(sub)
+    model = sm.OLS(sub.DepDelay, sub.loc[:,(&#39;const&#39;,&#39;Year&#39;)])
+    results = model.fit()
+    return results.params
+
+import time
+time.time()
+parallel_result = lview.map(f, range(len(dests)))
+#result = map(f, range(len(dests)))
+time.time()
+
+# some NaN values because all &#39;Year&#39; values are the same for some destinations
+
+parallel_result</code></pre>
+<p>And we'll stop our cluster.</p>
+<pre><code>ipcluster stop</code></pre>
+<h1 id="example-use-of-standard-software-r">Example use of standard software: R</h1>
 <p>Let's see a basic example of doing an analysis in R across multiple cores on multiple nodes. We'll use the airline departure data in <em>bayArea.csv</em>.</p>
 <p>We'll do this interactively though often this sort of thing would be done via a batch job.</p>
 <pre><code># remember to do I/O off scratch
@@ -321,8 +385,8 @@ Rscript -e &quot;install.packages(&#39;doMPI&#39;, repos = &#39;http://cran.cnr.
 
 srun -A co_stat -p savio2  -N 3 --ntasks-per-node=24 -t 30:0 --pty bash
 module load gcc openmpi r Rmpi
-mpirun R CMD BATCH --no-save parallel.R parallel.Rout &amp;</code></pre>
-<p>Now here's the R code (see <em>parallel.R</em>) we'll run:</p>
+mpirun R CMD BATCH --no-save parallel-multi.R parallel-multi.Rout &amp;</code></pre>
+<p>Now here's the R code (see <em>parallel-multi.R</em>) we'll run:</p>
 <pre><code>library(doMPI)
 
 cl = startMPIcluster()  # by default will start one fewer slave
