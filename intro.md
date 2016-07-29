@@ -448,6 +448,83 @@ We provide some [tips about monitoring your job](http://research-it.berkeley.edu
 
 # Basic use of standard software: R
 
+Let's see a basic example of doing an analysis in R across multiple cores on multiple nodes. We'll use the airline departure data in *bayArea.csv*.
+
+We'll do this interactively though often this sort of thing would be done via a batch job.
+
+```
+# remember to do I/O off scratch
+cp bayArea.csv /global/scratch/paciorek/.
+module load r Rmpi
+Rscript -e "install.packages('doMPI', repos = 'http://cran.cnr.berkeley.edu', lib = '/global/home/users/paciorek/R/x86_64-pc-linux-gnu-library/3.2')"
+
+srun -A co_stat -p savio2  -N 3 --ntasks-per-node=24 -t 30:0 --pty bash
+module load gcc openmpi r Rmpi
+mpirun R CMD BATCH --no-save parallel.R parallel.Rout &
+```
+
+Now here's the R code (see *parallel.R*) we'll run:
+```
+library(doMPI)
+
+cl = startMPIcluster()  # by default will start one fewer slave
+registerDoMPI(cl)
+clusterSize(cl) # just to check
+
+dat <- read.csv('/global/scratch/paciorek/bayArea.csv', header = FALSE,
+                stringsAsFactors = FALSE)
+names(dat)[16:18] <- c('delay', 'origin', 'dest')
+table(dat$dest)
+
+destVals <- unique(dat$dest)
+
+# restrict to only columns we need to reduce copying time
+dat2 <- subset(dat, select = c('delay', 'origin', 'dest'))
+
+# some overhead in copying 'dat2' to worker processes...
+results <- foreach(destVal = destVals) %dopar% {
+    sub <- subset(dat2, dest == destVal)
+    summary(sub$delay)
+}
+
+
+results
+
+closeCluster(cl)
+mpi.quit()
+```
+
+If you just want to parallelize within a node:
+
+```
+srun -A co_stat -p savio2  -N 1 -t 30:0 --pty bash
+module load r
+mpirun R CMD BATCH --no-save parallel-one.R parallel-one.Rout &
+```
+
+Now here's the R code (see *parallel-one.R*) we'll run:
+```
+library(doParallel)
+
+nCores <- Sys.getenv('SLURM_CPUS_ON_NODE')
+registerDoParallel(nCores)
+
+dat <- read.csv('/global/scratch/paciorek/bayArea.csv', header = FALSE,
+                stringsAsFactors = FALSE)
+names(dat)[16:18] <- c('delay', 'origin', 'dest')
+table(dat$dest)
+
+destVals <- unique(dat$dest)
+
+results <- foreach(destVal = destVals) %dopar% {
+    sub <- subset(dat, dest == destVal)
+    summary(sub$delay)
+}
+
+results
+```
+
+
 
 # How to get additional help
 

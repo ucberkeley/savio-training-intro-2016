@@ -367,6 +367,67 @@ sinfo -p savio2_gpu</code></pre>
 </div>
 <div id="basic-use-of-standard-software-r" class="slide section level1">
 <h1>Basic use of standard software: R</h1>
+<p>Let's see a basic example of doing an analysis in R across multiple cores on multiple nodes. We'll use the airline departure data in <em>bayArea.csv</em>.</p>
+<p>We'll do this interactively though often this sort of thing would be done via a batch job.</p>
+<pre><code># remember to do I/O off scratch
+cp bayArea.csv /global/scratch/paciorek/.
+module load r Rmpi
+Rscript -e &quot;install.packages(&#39;doMPI&#39;, repos = &#39;http://cran.cnr.berkeley.edu&#39;, lib = &#39;/global/home/users/paciorek/R/x86_64-pc-linux-gnu-library/3.2&#39;)&quot;
+
+srun -A co_stat -p savio2  -N 3 --ntasks-per-node=24 -t 30:0 --pty bash
+module load gcc openmpi r Rmpi
+mpirun R CMD BATCH --no-save parallel.R parallel.Rout &amp;</code></pre>
+<p>Now here's the R code (see <em>parallel.R</em>) we'll run:</p>
+<pre><code>library(doMPI)
+
+cl = startMPIcluster()  # by default will start one fewer slave
+registerDoMPI(cl)
+clusterSize(cl) # just to check
+
+dat &lt;- read.csv(&#39;/global/scratch/paciorek/bayArea.csv&#39;, header = FALSE,
+                stringsAsFactors = FALSE)
+names(dat)[16:18] &lt;- c(&#39;delay&#39;, &#39;origin&#39;, &#39;dest&#39;)
+table(dat$dest)
+
+destVals &lt;- unique(dat$dest)
+
+# restrict to only columns we need to reduce copying time
+dat2 &lt;- subset(dat, select = c(&#39;delay&#39;, &#39;origin&#39;, &#39;dest&#39;))
+
+# some overhead in copying &#39;dat2&#39; to worker processes...
+results &lt;- foreach(destVal = destVals) %dopar% {
+    sub &lt;- subset(dat2, dest == destVal)
+    summary(sub$delay)
+}
+
+
+results
+
+closeCluster(cl)
+mpi.quit()</code></pre>
+<p>If you just want to parallelize within a node:</p>
+<pre><code>srun -A co_stat -p savio2  -N 1 -t 30:0 --pty bash
+module load r
+mpirun R CMD BATCH --no-save parallel-one.R parallel-one.Rout &amp;</code></pre>
+<p>Now here's the R code (see <em>parallel-one.R</em>) we'll run:</p>
+<pre><code>library(doParallel)
+
+nCores &lt;- Sys.getenv(&#39;SLURM_CPUS_ON_NODE&#39;)
+registerDoParallel(nCores)
+
+dat &lt;- read.csv(&#39;/global/scratch/paciorek/bayArea.csv&#39;, header = FALSE,
+                stringsAsFactors = FALSE)
+names(dat)[16:18] &lt;- c(&#39;delay&#39;, &#39;origin&#39;, &#39;dest&#39;)
+table(dat$dest)
+
+destVals &lt;- unique(dat$dest)
+
+results &lt;- foreach(destVal = destVals) %dopar% {
+    sub &lt;- subset(dat, dest == destVal)
+    summary(sub$delay)
+}
+
+results</code></pre>
 </div>
 <div id="how-to-get-additional-help" class="slide section level1">
 <h1>How to get additional help</h1>
