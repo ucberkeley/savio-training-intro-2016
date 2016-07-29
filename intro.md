@@ -460,10 +460,10 @@ Rscript -e "install.packages('doMPI', repos = 'http://cran.cnr.berkeley.edu', li
 
 srun -A co_stat -p savio2  -N 3 --ntasks-per-node=24 -t 30:0 --pty bash
 module load gcc openmpi r Rmpi
-mpirun R CMD BATCH --no-save parallel.R parallel.Rout &
+mpirun R CMD BATCH --no-save parallel-multi.R parallel-multi.Rout &
 ```
 
-Now here's the R code (see *parallel.R*) we'll run:
+Now here's the R code (see *parallel-multi.R*) we'll run:
 ```
 library(doMPI)
 
