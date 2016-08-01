@@ -71,9 +71,10 @@ August 2, 2016
 <div id="system-capabilities-and-hardware" class="slide section level1">
 <h1>System capabilities and hardware</h1>
 <ul>
-<li>Savio is a 323-node, 6696-core Linux cluster rated at 200 peak teraFLOPS.</li>
-<li>162 compute nodes provided by the institution for general access</li>
-<li>161 nodes contributed by researchers in the Condo program</li>
+<li>Savio is a 335-node, &gt;7000-core Linux cluster rated at 200 peak teraFLOPS.</li>
+<li>~162 compute nodes provided by the institution for general access</li>
+<li>~161 compute nodes contributed by researchers in the Condo program</li>
+<li>50 nodes in the process of being added</li>
 </ul>
 </div>
 <div id="getting-access-to-the-system---fca-and-condo" class="slide section level1">
@@ -117,8 +118,9 @@ August 2, 2016
 <pre><code>ssh SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
 <p>Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. YYYYYY will be shown when you open your <em>Google authenticator</em> app on your phone/tablet.</p>
 <p>If you want to be able to open programs with graphical user interfaces:</p>
-<pre><code>ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
+<pre><code>ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
 <p>To display the graphical windows on your local machine, you'll need X server software on your own machine to manage the graphical windows. For Windows, your options include <em>eXceed</em> or <em>Xming</em> and for Mac, there is <em>XQuartz</em>.</p>
+<p>Sidenote: we are investigating other mechanisms to interact with Savio via a graphical user interface (GUI).</p>
 </div>
 <div id="data-transfer-with-examples-tofrom-laptop-box-google-drive-aws" class="slide section level1">
 <h1>Data transfer with examples to/from laptop, Box, Google Drive, AWS</h1>
@@ -310,7 +312,7 @@ wwall -j JOB_ID</code></pre>
 <h1>Interactive jobs</h1>
 <p>You can also do work interactively.</p>
 <p>For this, you may want to have used the -X flag to ssh if you are running software with a GUI such as MATLAB.</p>
-<pre><code># ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu
+<pre><code># ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
 srun -A co_stat -p savio2  -N 1 -t 10:0 --pty bash
 # now execute on the compute node:
 module load matlab

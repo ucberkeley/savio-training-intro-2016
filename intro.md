@@ -43,9 +43,10 @@ This training session will cover the following topics:
 
 # System capabilities and hardware
 
-- Savio is a 323-node, 6696-core Linux cluster rated at 200 peak teraFLOPS. 
-   - 162 compute nodes provided by the institution for general access
-   - 161 nodes contributed by researchers in the Condo program
+- Savio is a 335-node, >7000-core Linux cluster rated at 200 peak teraFLOPS. 
+   - ~162 compute nodes provided by the institution for general access
+   - ~161 compute nodes contributed by researchers in the Condo program
+   - 50 nodes in the process of being added
 
 
 
@@ -98,10 +99,12 @@ Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time passw
 
 If you want to be able to open programs with graphical user interfaces:
 ```
-ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu
+ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
 ```
 
 To display the graphical windows on your local machine, you'll need X server software on your own machine to manage the graphical windows. For Windows, your options include *eXceed* or *Xming* and for Mac, there is *XQuartz*.
+
+Sidenote: we are investigating other mechanisms to interact with Savio via a graphical user interface (GUI). 
 
 # Data transfer with examples to/from laptop, Box, Google Drive, AWS
 
@@ -371,7 +374,7 @@ You can also do work interactively.
 For this, you may want to have used the -X flag to ssh if you are running software with a GUI such as MATLAB. 
 
 ```
-# ssh -X SAVIO_USERNAME@hpc.brc.berkeley.edu
+# ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
 srun -A co_stat -p savio2  -N 1 -t 10:0 --pty bash
 # now execute on the compute node:
 module load matlab
