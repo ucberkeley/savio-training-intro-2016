@@ -84,11 +84,11 @@ Savio has a few different kinds of nodes:
 
 # Logging in
 
-To login, you need to have software on your own machine that gives you access to a UNIX terminal (command-line) session. These come built-in with Mac (see `Applications -> Utilities -> Terminal`). For Windows, some options include *Putty*.
+To login, you need to have software on your own machine that gives you access to a UNIX terminal (command-line) session. These come built-in with Mac (see `Applications -> Utilities -> Terminal`). For Windows, some options include [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html).
 
-Here are instructions for [logging in](http://research-it.berkeley.edu/services/high-performance-computing/logging-savio).
+You also need to set up your smartphone or tablet with *Google Authenticator* to generate one-time passwords for you.
 
-You need to set up your smartphone or tablet with *Google authenticator* to generate one-time passwords for you.
+Here are instructions for [doing this setup, and for logging in](http://research-it.berkeley.edu/services/high-performance-computing/logging-savio).
 
 Then to login:
 ```
@@ -137,7 +137,7 @@ scp OTHER_USERNAME@other.domain.edu:~/data/. \
     SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv 
 ```
 
-One program you can use with Windows is WinSCP. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.
+One program you can use with Windows is WinSCP, and a multi-platform program for doing transfers via SFTP is FileZilla. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.
 
 You can package multiple files (including directory structure) together using tar:
 ```
