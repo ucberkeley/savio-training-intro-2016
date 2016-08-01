@@ -69,7 +69,8 @@ You have access to the following disk space, described [here in the *Storage and
 
 When reading/writing data to/from disk, unless the amount of data is small, please put the data in your scratch space at `/global/scratch/SAVIO_USERNAME`. The system is set up so that disk access for all users is optimized when users are doing input/output (I/O) off of scratch rather than off of their home directories. Doing I/O with files on your home directory can impact the ability of others to access their files on the filesystem. 
 
-We are also making available disk space for purchase via a new *condo storage* offering. The minimum purchase is $7000, which will provide roughly 20-25 TB for five years. 
+We are also making available disk space for purchase via a new *condo storage* offering. The minimum purchase will likely be around $14,000, which will provide roughly 40 TB for five years, but the exact details are still being worked out.
+
 
 # Login nodes, compute nodes, and DTN nodes 
 

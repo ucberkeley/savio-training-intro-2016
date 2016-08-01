@@ -75,7 +75,7 @@
 <h1 id="disk-space-options-home-scratch-project-condo-storage">Disk space options (home, scratch, project, condo storage)</h1>
 <p>You have access to the following disk space, described <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">here in the <em>Storage and Backup</em> section</a>.</p>
 <p>When reading/writing data to/from disk, unless the amount of data is small, please put the data in your scratch space at <code>/global/scratch/SAVIO_USERNAME</code>. The system is set up so that disk access for all users is optimized when users are doing input/output (I/O) off of scratch rather than off of their home directories. Doing I/O with files on your home directory can impact the ability of others to access their files on the filesystem.</p>
-<p>We are also making available disk space for purchase via a new <em>condo storage</em> offering. The minimum purchase is $7000, which will provide roughly 20-25 TB for five years.</p>
+<p>We are also making available disk space for purchase via a new <em>condo storage</em> offering. The minimum purchase will likely be around $14,000, which will provide roughly 40 TB for five years, but the exact details are still being worked out.</p>
 <h1 id="login-nodes-compute-nodes-and-dtn-nodes">Login nodes, compute nodes, and DTN nodes</h1>
 <p>Savio has a few different kinds of nodes:</p>
 <ul>
@@ -88,9 +88,9 @@
 </center>
 
 <h1 id="logging-in">Logging in</h1>
-<p>To login, you need to have software on your own machine that gives you access to a UNIX terminal (command-line) session. These come built-in with Mac (see <code>Applications -&gt; Utilities -&gt; Terminal</code>). For Windows, some options include <em>Putty</em>.</p>
-<p>Here are instructions for <a href="http://research-it.berkeley.edu/services/high-performance-computing/logging-savio">logging in</a>.</p>
-<p>You need to set up your smartphone or tablet with <em>Google authenticator</em> to generate one-time passwords for you.</p>
+<p>To login, you need to have software on your own machine that gives you access to a UNIX terminal (command-line) session. These come built-in with Mac (see <code>Applications -&gt; Utilities -&gt; Terminal</code>). For Windows, some options include <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">PuTTY</a>.</p>
+<p>You also need to set up your smartphone or tablet with <em>Google Authenticator</em> to generate one-time passwords for you.</p>
+<p>Here are instructions for <a href="http://research-it.berkeley.edu/services/high-performance-computing/logging-savio">doing this setup, and for logging in</a>.</p>
 <p>Then to login:</p>
 <pre><code>ssh SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
 <p>Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. YYYYYY will be shown when you open your <em>Google authenticator</em> app on your phone/tablet.</p>
@@ -116,7 +116,7 @@ scp paciorek@dtn.brc.berkeley.edu:~/data/newName.csv ~/Desktop/.</code></pre>
     OTHER_USERNAME@other.domain.edu:~/data/.
 scp OTHER_USERNAME@other.domain.edu:~/data/. \
     SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv </code></pre>
-<p>One program you can use with Windows is WinSCP. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.</p>
+<p>One program you can use with Windows is WinSCP, and a multi-platform program for doing transfers via SFTP is FileZilla. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.</p>
 <p>You can package multiple files (including directory structure) together using tar:</p>
 <pre><code>tar -cvzf files.tgz dir_to_zip 
 # to untar later:
