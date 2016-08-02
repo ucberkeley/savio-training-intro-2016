@@ -386,7 +386,7 @@ matlab
 
 Condo users have access to the broader compute resource that is limited only by the size of partitions, under the *savio_lowprio* QoS (queue). However this QoS does not get a priority as high as the general QoSs, such as *savio_normal* and *savio_debug*, or all the condo QoSs, and it is subject to preemption when all the other QoSs become busy. 
 
-More details can be found [in the *Low Priority Jobs* section](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
+More details can be found [in the *Low Priority Jobs* section of the user guide](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
 Suppose I wanted to burst beyond the Statistics condo to run on 20 nodes. I'll illustrate here with an interactive job though usually this would be for a batch job.
 
@@ -404,6 +404,7 @@ You must request access to the HTC partition at this time before you can submit 
 ```
 srun -A co_stat -p savio2_htc  -n 2 -t 10:0 --pty bash
 env | grep SLURM
+module load python/3.2.3 numpy
 python3 calc.py >& calc.out &
 top
 ```
@@ -426,7 +427,7 @@ The basic command for seeing what is running on the system is `squeue`:
 ```
 squeue
 squeue -u SAVIO_USERNAME
-squeue -a co_stat
+squeue -A co_stat
 ```
 
 To see what nodes are available in a given partition:
@@ -461,7 +462,7 @@ cp bayArea.csv /global/scratch/paciorek/.
 # install Python package
 module load pip
 # trial and error to realize which package dependencies available in modules...
-module load scipy pandas pytz
+module load python/2.7.8 numpy scipy six pandas pytz
 pip install --user statsmodels
 ```
 
@@ -476,6 +477,7 @@ Now we'll start up a cluster using IPython's parallel tools. To do this across m
 ```
 module load python/2.7.8 ipython gcc openmpi
 ipcontroller --ip='*' &
+sleep 5
 srun ipengine &
 sleep 15  # wait until all engines have successfully started
 ipython
@@ -556,7 +558,7 @@ module load gcc openmpi r Rmpi
 mpirun R CMD BATCH --no-save parallel-multi.R parallel-multi.Rout &
 ```
 
-Now here's the R code (see *parallel-multi.R*) we'll run:
+Now here's the R code (see *parallel-multi.R*) we're running:
 ```
 library(doMPI)
 
@@ -592,10 +594,10 @@ If you just want to parallelize within a node:
 ```
 srun -A co_stat -p savio2  -N 1 -t 30:0 --pty bash
 module load r
-mpirun R CMD BATCH --no-save parallel-one.R parallel-one.Rout &
+R CMD BATCH --no-save parallel-one.R parallel-one.Rout &
 ```
 
-Now here's the R code (see *parallel-one.R*) we'll run:
+Now here's the R code (see *parallel-one.R*) we're running:
 ```
 library(doParallel)
 
@@ -622,11 +624,11 @@ results
 # How to get additional help
 
  - For technical issues and questions about using Savio: 
-    - brc-hpc-help@berkeley.edu.
+    - brc-hpc-help@berkeley.edu
  - For questions about computing resources in general, including cloud computing: 
-    - brc@berkeley.edu.
+    - brc@berkeley.edu
  - For questions about data management (including HIPAA-protected data): 
-    - researchdata@berkeley.edu.
+    - researchdata@berkeley.edu
 
 
 # Upcoming events

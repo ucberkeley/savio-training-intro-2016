@@ -71,7 +71,7 @@
 <p>Faculty/principal investigators can allow researchers working with them to get user accounts with access to the FCA or condo resources available to the faculty member.</p>
 <h1 id="savio-computing-nodes">Savio computing nodes</h1>
 <p>Let's take a look at the hardware specifications of the computing nodes on the cluster <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">(see the <em>Hardware Configuration</em> section of this document)</a>.</p>
-<p>The nodes are divided into several pools, called partitions <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">(see the <em>Configuration Details</em> section of this document)</a>. Any job you submit must be submitted to a partition to which you have access.</p>
+<p>The nodes are divided into several pools, called partitions. These partitions have different restrictions and costs associated with them <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">(see the <em>Configuration Details</em> section of this document)</a>. Any job you submit must be submitted to a partition to which you have access.</p>
 <h1 id="disk-space-options-home-scratch-project-condo-storage">Disk space options (home, scratch, project, condo storage)</h1>
 <p>You have access to the following disk space, described <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">here in the <em>Storage and Backup</em> section</a>.</p>
 <p>When reading/writing data to/from disk, unless the amount of data is small, please put the data in your scratch space at <code>/global/scratch/SAVIO_USERNAME</code>. The system is set up so that disk access for all users is optimized when users are doing input/output (I/O) off of scratch rather than off of their home directories. Doing I/O with files on your home directory can impact the ability of others to access their files on the filesystem.</p>
@@ -94,6 +94,7 @@
 <p>Then to login:</p>
 <pre><code>ssh SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
 <p>Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. YYYYYY will be shown when you open your <em>Google authenticator</em> app on your phone/tablet.</p>
+<p>One can then navigate around and get information using standard UNIX commands such as <code>ls</code>, <code>cd</code>, <code>du</code>, <code>df</code>, etc.</p>
 <p>If you want to be able to open programs with graphical user interfaces:</p>
 <pre><code>ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu</code></pre>
 <p>To display the graphical windows on your local machine, you'll need X server software on your own machine to manage the graphical windows. For Windows, your options include <em>eXceed</em> or <em>Xming</em> and for Mac, there is <em>XQuartz</em>.</p>
@@ -111,12 +112,10 @@ scp bayArea.csv paciorek@dtn.brc.berkeley.edu:/global/scratch/paciorek/.
 
 # from Savio, while on your local machine
 scp paciorek@dtn.brc.berkeley.edu:~/data/newName.csv ~/Desktop/.</code></pre>
-<p>If you can ssh to your local machine or want to transfer files to other systems on to which you can ssh, you can use the above syntax. The place you are copying from comes first and the place you are copying to comes second. For example,</p>
-<pre><code>scp SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv \
-    OTHER_USERNAME@other.domain.edu:~/data/.
-scp OTHER_USERNAME@other.domain.edu:~/data/. \
-    SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv </code></pre>
-<p>One program you can use with Windows is WinSCP, and a multi-platform program for doing transfers via SFTP is FileZilla. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.</p>
+<p>If you can ssh to your local machine or want to transfer files to other systems on to which you can ssh, you can syntax like this, while logged onto Savio:</p>
+<pre><code>ssh dtn
+scp ~/file.csv OTHER_USERNAME@other.domain.edu:~/data/.</code></pre>
+<p>One program you can use with Windows is <em>WinSCP</em>, and a multi-platform program for doing transfers via SFTP is <em>FileZilla</em>. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.</p>
 <p>You can package multiple files (including directory structure) together using tar:</p>
 <pre><code>tar -cvzf files.tgz dir_to_zip 
 # to untar later:
@@ -125,7 +124,7 @@ tar -xvzf files.tgz</code></pre>
 <p>You can use Globus Connect to transfer data data to/from Savio (and between other resources) quickly and unattended. This is a better choice for large transfers. Here are some <a href="http://research-it.berkeley.edu/services/high-performance-computing/using-globus-connect-savio">instructions</a>.</p>
 <p>Globus transfers data between <em>endpoints</em>. Possible endpoints include: Savio, your laptop or desktop, NERSC, and XSEDE, among others.</p>
 <p>Savio's endpoint is named <code>ucb#brc</code>.</p>
-<p>If you are transferring to/from your laptop, you'll need Globus Connect Personal set up and running on your machine and you'll need to establish your machine as an endpoint. At that point you can proceed as below.</p>
+<p>If you are transferring to/from your laptop, you'll need 1) Globus Connect Personal set up, 2) your machine established as an endpoint and 3) Globus Connect Pesonal actively running on your machine. At that point you can proceed as below.</p>
 <p>To transfer files, you open Globus at <a href="https://globus.org">globus.org</a> and authenticate to the endpoints you want to transfer between. You can then start a transfer and it will proceed in the background, including restarting if interrupted.</p>
 <p>Globus also provides a <a href="https://docs.globus.org/cli/using-the-cli">command line interface</a> that will allow you to do transfers programmatically, such that a transfer could be embedded in a workflow script.</p>
 <h1 id="data-transfer-box">Data transfer: Box</h1>
@@ -276,7 +275,7 @@ module load matlab
 matlab</code></pre>
 <h1 id="low-priority-queue">Low-priority queue</h1>
 <p>Condo users have access to the broader compute resource that is limited only by the size of partitions, under the <em>savio_lowprio</em> QoS (queue). However this QoS does not get a priority as high as the general QoSs, such as <em>savio_normal</em> and <em>savio_debug</em>, or all the condo QoSs, and it is subject to preemption when all the other QoSs become busy.</p>
-<p>More details can be found <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">in the <em>Low Priority Jobs</em> section</a>.</p>
+<p>More details can be found <a href="http://research-it.berkeley.edu/services/high-performance-computing/user-guide">in the <em>Low Priority Jobs</em> section of the user guide</a>.</p>
 <p>Suppose I wanted to burst beyond the Statistics condo to run on 20 nodes. I'll illustrate here with an interactive job though usually this would be for a batch job.</p>
 <pre><code>srun -A co_stat -p savio2 --qos=savio_lowprio  -N 20 -t 10:0 --pty bash
 env | grep SLURM</code></pre>
@@ -285,6 +284,7 @@ env | grep SLURM</code></pre>
 <p>You must request access to the HTC partition at this time before you can submit jobs to it.</p>
 <pre><code>srun -A co_stat -p savio2_htc  -n 2 -t 10:0 --pty bash
 env | grep SLURM
+module load python/3.2.3 numpy
 python3 calc.py &gt;&amp; calc.out &amp;
 top</code></pre>
 <h1 id="alternatives-to-the-htc-partition-for-collections-of-serial-jobs">Alternatives to the HTC partition for collections of serial jobs</h1>
@@ -303,7 +303,7 @@ top</code></pre>
 <p>The basic command for seeing what is running on the system is <code>squeue</code>:</p>
 <pre><code>squeue
 squeue -u SAVIO_USERNAME
-squeue -a co_stat</code></pre>
+squeue -A co_stat</code></pre>
 <p>To see what nodes are available in a given partition:</p>
 <pre><code>sinfo -p savio
 sinfo -p savio2_gpu</code></pre>
@@ -321,13 +321,14 @@ cp bayArea.csv /global/scratch/paciorek/.
 # install Python package
 module load pip
 # trial and error to realize which package dependencies available in modules...
-module load scipy pandas pytz
+module load python/2.7.8 numpy scipy six pandas pytz
 pip install --user statsmodels</code></pre>
 <p>Now we'll start up an interactive session, though often this sort of thing would be done via a batch job.</p>
 <pre><code>srun -A co_stat -p savio2  -N 2 --ntasks-per-node=24 -t 30:0 --pty bash</code></pre>
 <p>Now we'll start up a cluster using IPython's parallel tools. To do this across multiple nodes within a SLURM job, it goes like this:</p>
 <pre><code>module load python/2.7.8 ipython gcc openmpi
 ipcontroller --ip=&#39;*&#39; &amp;
+sleep 5
 srun ipengine &amp;
 sleep 15  # wait until all engines have successfully started
 ipython</code></pre>
@@ -388,7 +389,7 @@ Rscript -e &quot;install.packages(&#39;doMPI&#39;, repos = &#39;http://cran.cnr.
 srun -A co_stat -p savio2  -N 3 --ntasks-per-node=24 -t 30:0 --pty bash
 module load gcc openmpi r Rmpi
 mpirun R CMD BATCH --no-save parallel-multi.R parallel-multi.Rout &amp;</code></pre>
-<p>Now here's the R code (see <em>parallel-multi.R</em>) we'll run:</p>
+<p>Now here's the R code (see <em>parallel-multi.R</em>) we're running:</p>
 <pre><code>library(doMPI)
 
 cl = startMPIcluster()  # by default will start one fewer slave
@@ -419,8 +420,8 @@ mpi.quit()</code></pre>
 <p>If you just want to parallelize within a node:</p>
 <pre><code>srun -A co_stat -p savio2  -N 1 -t 30:0 --pty bash
 module load r
-mpirun R CMD BATCH --no-save parallel-one.R parallel-one.Rout &amp;</code></pre>
-<p>Now here's the R code (see <em>parallel-one.R</em>) we'll run:</p>
+R CMD BATCH --no-save parallel-one.R parallel-one.Rout &amp;</code></pre>
+<p>Now here's the R code (see <em>parallel-one.R</em>) we're running:</p>
 <pre><code>library(doParallel)
 
 nCores &lt;- Sys.getenv(&#39;SLURM_CPUS_ON_NODE&#39;)
@@ -443,15 +444,15 @@ results</code></pre>
 <ul>
 <li>For technical issues and questions about using Savio:
 <ul>
-<li>brc-hpc-help@berkeley.edu.</li>
+<li>brc-hpc-help@berkeley.edu</li>
 </ul></li>
 <li>For questions about computing resources in general, including cloud computing:
 <ul>
-<li>brc@berkeley.edu.</li>
+<li>brc@berkeley.edu</li>
 </ul></li>
 <li>For questions about data management (including HIPAA-protected data):
 <ul>
-<li>researchdata@berkeley.edu.</li>
+<li>researchdata@berkeley.edu</li>
 </ul></li>
 </ul>
 <h1 id="upcoming-events">Upcoming events</h1>
