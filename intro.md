@@ -61,7 +61,7 @@ Faculty/principal investigators can allow researchers working with them to get u
 
 Let's take a look at the hardware specifications of the computing nodes on the cluster [(see the *Hardware Configuration* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide).
 
-The nodes are divided into several pools, called partitions [(see the *Configuration Details* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide). Any job you submit must be submitted to a partition to which you have access.
+The nodes are divided into several pools, called partitions. These partitions have different restrictions and costs associated with them [(see the *Configuration Details* section of this document)](http://research-it.berkeley.edu/services/high-performance-computing/user-guide). Any job you submit must be submitted to a partition to which you have access.
 
 # Disk space options (home, scratch, project, condo storage)
 
@@ -98,6 +98,8 @@ ssh SAVIO_USERNAME@hpc.brc.berkeley.edu
 
 Then enter XXXXXYYYYYY where XXXXXX is your PIN and YYYYYY is the one-time password. YYYYYY will be shown when you open your *Google authenticator* app on your phone/tablet.
 
+One can then navigate around and get information using standard UNIX commands such as `ls`, `cd`, `du`, `df`, etc.
+
 If you want to be able to open programs with graphical user interfaces:
 ```
 ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
@@ -129,16 +131,14 @@ scp bayArea.csv paciorek@dtn.brc.berkeley.edu:/global/scratch/paciorek/.
 scp paciorek@dtn.brc.berkeley.edu:~/data/newName.csv ~/Desktop/.
 ```
 
-If you can ssh to your local machine or want to transfer files to other systems on to which you can ssh, you can use the above syntax. The place you are copying from comes first and the place you are copying to comes second. For example,
+If you can ssh to your local machine or want to transfer files to other systems on to which you can ssh, you can syntax like this, while logged onto Savio:
 
 ```
-scp SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv \
-    OTHER_USERNAME@other.domain.edu:~/data/.
-scp OTHER_USERNAME@other.domain.edu:~/data/. \
-    SAVIO_USERNAME@dtn.brc.berkeley.edu:~/file.csv 
+ssh dtn
+scp ~/file.csv OTHER_USERNAME@other.domain.edu:~/data/.
 ```
 
-One program you can use with Windows is WinSCP, and a multi-platform program for doing transfers via SFTP is FileZilla. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.
+One program you can use with Windows is *WinSCP*, and a multi-platform program for doing transfers via SFTP is *FileZilla*. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.
 
 You can package multiple files (including directory structure) together using tar:
 ```
@@ -155,7 +155,7 @@ Globus transfers data between *endpoints*. Possible endpoints include: Savio, yo
 
 Savio's endpoint is named `ucb#brc`.
 
-If you are transferring to/from your laptop, you'll need Globus Connect Personal set up and running on your machine and you'll need to establish your machine as an endpoint. At that point you can proceed as below.
+If you are transferring to/from your laptop, you'll need 1) Globus Connect Personal set up, 2) your machine established as an endpoint and 3) Globus Connect Pesonal actively running on your machine. At that point you can proceed as below.
 
 To transfer files, you open Globus at [globus.org](https://globus.org) and authenticate to the endpoints you want to transfer between. You can then start a transfer and it will proceed in the background, including restarting if interrupted. 
 
