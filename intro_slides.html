@@ -310,7 +310,7 @@ wwall -j JOB_ID</code></pre>
 <div id="interactive-jobs" class="slide section level1">
 <h1>Interactive jobs</h1>
 <p>You can also do work interactively.</p>
-<p>For this, you may want to have used the -X flag to ssh if you are running software with a GUI such as MATLAB.</p>
+<p>For this, you may want to have used the -Y flag to ssh if you are running software with a GUI such as MATLAB.</p>
 <pre><code># ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
 srun -A co_stat -p savio2  -N 1 -t 10:0 --pty bash
 # now execute on the compute node:

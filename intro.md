@@ -372,7 +372,7 @@ There are lots more examples of job submission scripts for different kinds of pa
 
 You can also do work interactively.
 
-For this, you may want to have used the -X flag to ssh if you are running software with a GUI such as MATLAB. 
+For this, you may want to have used the -Y flag to ssh if you are running software with a GUI such as MATLAB. 
 
 ```
 # ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
